@@ -4,9 +4,11 @@ const formAdicionarTarefa = document.querySelector('.app__form-add-task');
 const textArea = document.querySelector('.app__form-textarea');
 const ulTarefas = document.querySelector('.app__section-task-list');
 const botaoCancelarTarefa = document.querySelector('.app__form-footer__button--cancel');
+const paragradoDescricaoTarefa = document.querySelector('.app__section-active-task-description');
 
 // Carregando as tarefas do localStorage
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+let tarefaSelecionada = null;
 
 // Atualizando as tarefas no localStorage
 function atualizarTarefas() {
@@ -35,8 +37,9 @@ function criarElementoTarefa(tarefa) {
 
     // Alterando o nome da tarefa
     botao.onclick = () => {
+        // debugger;
         const novaDescricao = prompt("Qual é o novo nome da tarefa?");
-        console.log('Nova descrição da tarefa: ', novaDescricao);
+        // console.log('Nova descrição da tarefa: ', novaDescricao);
 
         // Atualizando a descrição da tarefa no localStorage
         if(novaDescricao) {
@@ -54,6 +57,24 @@ function criarElementoTarefa(tarefa) {
     li.append(svg);
     li.append(paragrafo);
     li.append(botao);
+
+    // Adicionando e removendo a tarefa para #Em andamento
+    li.onclick = () => {
+        document.querySelectorAll('.app__section-task-list-item-active').forEach(elemento =>
+            elemento.classList.remove('app__section-task-list-item-active')
+        );
+        
+        // Verificando se a tarefa clicada já está na sessão em questão
+        if(tarefaSelecionada == tarefa) {
+            paragradoDescricaoTarefa.textContent = '';
+            tarefaSelecionada = null;
+            return;
+        }
+
+        tarefaSelecionada = tarefa;
+        paragradoDescricaoTarefa.textContent = tarefa.descricao;
+        li.classList.add('app__section-task-list-item-active');
+    };
 
     return li;
 };
