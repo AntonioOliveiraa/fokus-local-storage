@@ -9,6 +9,7 @@ const paragradoDescricaoTarefa = document.querySelector('.app__section-active-ta
 // Carregando as tarefas do localStorage
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
 let tarefaSelecionada = null;
+let liTarefaSelecionada = null;
 
 // Atualizando as tarefas no localStorage
 function atualizarTarefas() {
@@ -63,15 +64,17 @@ function criarElementoTarefa(tarefa) {
         document.querySelectorAll('.app__section-task-list-item-active').forEach(elemento =>
             elemento.classList.remove('app__section-task-list-item-active')
         );
-        
+
         // Verificando se a tarefa clicada já está na sessão em questão
         if(tarefaSelecionada == tarefa) {
             paragradoDescricaoTarefa.textContent = '';
             tarefaSelecionada = null;
+            liTarefaSelecionada = null;
             return;
         }
 
         tarefaSelecionada = tarefa;
+        liTarefaSelecionada = li;
         paragradoDescricaoTarefa.textContent = tarefa.descricao;
         li.classList.add('app__section-task-list-item-active');
     };
@@ -112,3 +115,14 @@ tarefas.forEach(tarefa => {
     textArea.value = '';
     formAdicionarTarefa.classList.add('hidden');
 });
+
+
+// Marcando uma tarefa como concluída
+document.addEventListener('FocoFinalizado', () => {
+    if(tarefaSelecionada && liTarefaSelecionada) {
+        liTarefaSelecionada.classList.remove('app__section-task-list-item-active');
+        liTarefaSelecionada.classList.add('app__section-task-list-item-complete');
+        liTarefaSelecionada.querySelector('button').setAttribute('disabled', 'disabled');
+    }
+});
+
