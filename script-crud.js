@@ -4,6 +4,7 @@ const formAdicionarTarefa = document.querySelector('.app__form-add-task');
 const textArea = document.querySelector('.app__form-textarea');
 const ulTarefas = document.querySelector('.app__section-task-list');
 const botaoCancelarTarefa = document.querySelector('.app__form-footer__button--cancel');
+const botaoDeletarTarefa = document.querySelector('.app__form-footer__button--delete');
 const paragradoDescricaoTarefa = document.querySelector('.app__section-active-task-description');
 const btnRemoverConcluidas = document.querySelector('#btn-remover-concluidas');
 const btnRemoverTodas = document.querySelector('#btn-remover-todas');
@@ -125,6 +126,10 @@ tarefas.forEach(tarefa => {
     formAdicionarTarefa.classList.add('hidden');
 });
 
+// Deletando a descrição de uma tarefa do textArea ao clicar no botão de deletar
+botaoDeletarTarefa.addEventListener('click', () => {
+    textArea.value = '';
+});
 
 // Marcando uma tarefa como concluída após o timeout foco
 document.addEventListener('FocoFinalizado', () => {
@@ -153,5 +158,6 @@ const removerTarefas = (somenteCompletas) => {
     atualizarTarefas();
 };
 
+// Remover tarefas concluídas ao clicar no botão de remover tarefas concluídas
 btnRemoverConcluidas.onclick = () => removerTarefas(true);
 btnRemoverTodas.onclick = () => removerTarefas(false);
