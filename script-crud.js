@@ -59,25 +59,32 @@ function criarElementoTarefa(tarefa) {
     li.append(paragrafo);
     li.append(botao);
 
-    // Adicionando e removendo a tarefa para #Em andamento
-    li.onclick = () => {
-        document.querySelectorAll('.app__section-task-list-item-active').forEach(elemento =>
-            elemento.classList.remove('app__section-task-list-item-active')
-        );
+    // Verificando se a tarefa selecionada está completa
+    if(tarefa.completa) {
+        li.classList.add('app__section-task-list-item-complete');
+        botao.setAttribute('disabled', 'disabled');
+    } else {
+        // Adicionando e removendo a tarefa para #Em andamento
+        li.onclick = () => {
+            document.querySelectorAll('.app__section-task-list-item-active').forEach(elemento =>
+                elemento.classList.remove('app__section-task-list-item-active')
+            );
+    
+            // Verificando se a tarefa clicada já está na sessão em questão
+            if(tarefaSelecionada == tarefa) {
+                paragradoDescricaoTarefa.textContent = '';
+                tarefaSelecionada = null;
+                liTarefaSelecionada = null;
+                return;
+            }
+    
+            tarefaSelecionada = tarefa;
+            liTarefaSelecionada = li;
+            paragradoDescricaoTarefa.textContent = tarefa.descricao;
+            li.classList.add('app__section-task-list-item-active');
+        };
+    }
 
-        // Verificando se a tarefa clicada já está na sessão em questão
-        if(tarefaSelecionada == tarefa) {
-            paragradoDescricaoTarefa.textContent = '';
-            tarefaSelecionada = null;
-            liTarefaSelecionada = null;
-            return;
-        }
-
-        tarefaSelecionada = tarefa;
-        liTarefaSelecionada = li;
-        paragradoDescricaoTarefa.textContent = tarefa.descricao;
-        li.classList.add('app__section-task-list-item-active');
-    };
 
     return li;
 };
@@ -117,12 +124,16 @@ tarefas.forEach(tarefa => {
 });
 
 
-// Marcando uma tarefa como concluída
+// Marcando uma tarefa como concluída após o timeout foco
 document.addEventListener('FocoFinalizado', () => {
     if(tarefaSelecionada && liTarefaSelecionada) {
         liTarefaSelecionada.classList.remove('app__section-task-list-item-active');
         liTarefaSelecionada.classList.add('app__section-task-list-item-complete');
         liTarefaSelecionada.querySelector('button').setAttribute('disabled', 'disabled');
+
+        // Marcar a tarefa como conluída na localStorage
+        tarefaSelecionada.completa = true;
+        atualizarTarefas();
     }
 });
 
