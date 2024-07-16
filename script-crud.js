@@ -3,6 +3,7 @@ const btnAdicionarTarefa = document.querySelector('.app__button--add-task');
 const formAdicionarTarefa = document.querySelector('.app__form-add-task');
 const textArea = document.querySelector('.app__form-textarea');
 const ulTarefas = document.querySelector('.app__section-task-list');
+const botaoCancelarTarefa = document.querySelector('.app__form-footer__button--cancel');
 
 // Carregando as tarefas do localStorage
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
@@ -37,6 +38,7 @@ function criarElementoTarefa(tarefa) {
         const novaDescricao = prompt("Qual é o novo nome da tarefa?");
         console.log('Nova descrição da tarefa: ', novaDescricao);
 
+        // Atualizando a descrição da tarefa no localStorage
         if(novaDescricao) {
             paragrafo.textContent = novaDescricao;
     
@@ -82,4 +84,10 @@ formAdicionarTarefa.addEventListener('submit', (evento) => {
 tarefas.forEach(tarefa => {
     const elementoTarefa = criarElementoTarefa(tarefa);
     ulTarefas.append(elementoTarefa);
+});
+
+// Cancelando a criação de uma tarefa ao clicar no botão cancelar
+ botaoCancelarTarefa.addEventListener('click', () => {
+    textArea.value = '';
+    formAdicionarTarefa.classList.add('hidden');
 });
